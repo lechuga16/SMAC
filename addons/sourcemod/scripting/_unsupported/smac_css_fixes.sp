@@ -74,12 +74,14 @@ public void OnMapEnd()
 /**
  * Defuse Fix
  */
-bool g_bDefuseFixEnabled;
-float g_fNextCheck[MAXPLAYERS+1];
-bool g_bAllowDefuse[MAXPLAYERS+1];
-
-int g_iDefuserEnt = -1;
-float g_vBombPos[3];
+bool
+	g_bDefuseFixEnabled,
+	g_bAllowDefuse[MAXPLAYERS+1];
+float
+	g_fNextCheck[MAXPLAYERS+1],
+	g_vBombPos[3];
+int
+	g_iDefuserEnt = -1;
 
 public void OnDefuseFixChanged(ConVar convar, char[] oldValue, char[] newValue)
 {

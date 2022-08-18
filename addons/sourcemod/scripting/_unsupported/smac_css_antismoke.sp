@@ -39,10 +39,13 @@ public Plugin myinfo =
 #define SMOKE_FADETIME	15.0	// Seconds until a smoke begins to fade away
 #define SMOKE_RADIUS	2025	// (45^2) Radius to check for a player inside a smoke cloud
 
-Handle g_hSmokeLoop = INVALID_HANDLE;
-Handle g_hSmokes = INVALID_HANDLE;
-bool g_bIsInSmoke[MAXPLAYERS+1];
-int g_iRoundCount;
+Handle
+	g_hSmokeLoop = INVALID_HANDLE,
+	g_hSmokes = INVALID_HANDLE;
+bool
+	g_bIsInSmoke[MAXPLAYERS+1];
+int
+	g_iRoundCount;
 
 /* Plugin Functions */
 public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max)

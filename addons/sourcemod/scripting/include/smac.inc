@@ -26,7 +26,7 @@
 
 /* Globals */
 #define SMAC_VERSION    "0.8.7.3"
-#define SMAC_URL        "https://github.com/Silenci0/SMAC"
+#define SMAC_URL        "https://github.com/lechuga16/SMAC"
 #define SMAC_AUTHOR     "SMAC Development Team"
 #define SMAC_MOD_ERROR  "This module will not work for this mod and should be removed."
 

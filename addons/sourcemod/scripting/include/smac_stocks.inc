@@ -22,6 +22,9 @@
 #endif
 #define _smac_stocks_included
 
+/* SM Includes */
+#include <sdktools>
+
 /**
  * Preprocessor directives
  */
@@ -216,7 +219,7 @@ stock bool L4D2_IsInfectedBusy(int client)
 
 stock bool ND_IsPlayerCommander(int client)
 {
-    return GameRules_GetPropEnt("m_hCommanders", 0) == client || GameRules_GetPropEnt("m_hCommanders", 1) == client;
+    return (GameRules_GetPropEnt("m_hCommanders", 0) == client || GameRules_GetPropEnt("m_hCommanders", 1) == client);
 }
 
 /**

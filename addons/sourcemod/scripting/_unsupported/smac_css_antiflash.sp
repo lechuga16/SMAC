@@ -35,8 +35,10 @@ public Plugin myinfo =
 };
 
 /* Globals */
-float g_fFlashedUntil[MAXPLAYERS+1];
-bool g_bFlashHooked = false;
+float
+	g_fFlashedUntil[MAXPLAYERS+1];
+bool
+	g_bFlashHooked = false;
 
 /* Plugin Functions */
 public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max)

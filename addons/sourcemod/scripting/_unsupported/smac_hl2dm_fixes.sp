@@ -36,8 +36,10 @@ public Plugin myinfo =
 };
 
 /* Globals */
-float g_fBlockTime[MAXPLAYERS+1];
-bool g_bHasCrossbow[MAXPLAYERS+1];
+float
+	g_fBlockTime[MAXPLAYERS+1];
+bool
+	g_bHasCrossbow[MAXPLAYERS+1];
 
 /* Plugin Functions */
 public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max)

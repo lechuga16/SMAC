@@ -2,7 +2,7 @@
 {
 	"SMAC_Tag"
 	{
-		"en"		"[SMAC] "
+		"en"		"[{green}SMAC{default}] "
 	}
 	
 	"SMAC_Banned"

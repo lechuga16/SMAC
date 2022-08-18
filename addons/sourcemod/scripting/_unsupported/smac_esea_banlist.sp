@@ -38,8 +38,10 @@ public Plugin myinfo =
 #define ESEA_HOSTNAME	"play.esea.net"
 #define ESEA_QUERY		"index.php?s=support&d=ban_list&type=1&format=csv"
 
-ConVar g_hCvarKick;
-Handle g_hBanlist = INVALID_HANDLE;
+ConVar
+	g_hCvarKick;
+Handle
+	g_hBanlist = INVALID_HANDLE;
 
 /* Plugin Functions */
 public void OnPluginStart()

@@ -35,7 +35,7 @@
 
 enum CvarOrder {
     Order_First = 0,
-    Order_Last,
+    Order_Last = 1,
     Order_MAX
 }
 
@@ -167,7 +167,7 @@ stock CvarComp GetCompTypeInt(const char[] sCompType)
     return Comp_Invalid;
 }
 
-stock void GetCompTypeString(CvarComp CCompType, char[] sCompType,int iSize)
+stock void GetCompTypeString(CvarComp CCompType , char[] sCompType, int iSize)
 {
     switch (CCompType)
     {
@@ -233,7 +233,7 @@ stock CvarAction GetCActionInt(const char[] sAction)
 
 stock void GetCActionString(CvarAction CAction, char[] sAction,int iSize)
 {
-    switch (CCompType)
+    switch (CAction)
     {
         case Action_Warn:
         {

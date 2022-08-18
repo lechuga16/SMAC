@@ -44,10 +44,13 @@ enum BanType {
     Ban_VAC
 };
 
-ConVar g_hCvarKick;
-ConVar g_hCvarVAC;
-Handle g_hBanlist = INVALID_HANDLE;
-bool g_bLateLoad = false;
+ConVar
+	g_hCvarKick,
+	g_hCvarVAC;
+Handle
+	g_hBanlist = INVALID_HANDLE;
+bool
+	g_bLateLoad = false;
 
 /* Plugin Functions */
 public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max)
