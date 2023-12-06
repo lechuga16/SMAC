@@ -653,7 +653,7 @@ public void OnConVarQueryFinished(QueryCookie cookie, int client, ConVarQueryRes
 			{
 				SMAC_LogAction(client, "was banned for failing checks on convar \"%s\". result \"%s\" | CompType: \"%s\" | cvarValue \"%s\" | value: \"%s\" | value2: \"%s\"",
 				               sCvar, sResult, sCompType, cvarValue, sValue, sValue2);
-				SMAC_Ban(client, "ConVar <%s %s> violation", sCvar, cvarValue);
+				SMAC_Ban(client, "ConVar %s violation", sCvar);
 			}
 		}
 	}
