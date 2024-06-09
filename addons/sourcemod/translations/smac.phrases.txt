@@ -132,4 +132,53 @@
 	{
 		"en"		"This server is protected by SourceMod Anti-Cheat."
 	}
+
+	"SMAC_CheatDisabled"
+	{
+		"en"		"sv_cheats has been {blue}disabled{default}. ConVar check is {olive}resumed{default}."
+	}
+
+	"SMAC_CheatEnabled"
+	{
+		"en"		"sv_cheats has been {red}enabled{default}. ConVar check is {olive}disabled{default}."
+	}
+
+	"SMAC_CvarAdded"
+	{
+		"#format"	"{1:s}"
+		"en"		"{1} successfully added."
+	}
+
+	"SMAC_Usage"
+	{
+		"en"		"Usage"
+	}
+
+	"SMAC_NoConVar"
+	{
+		"en"		"There are no stored variables."
+	}
+
+	"SMAC_PrintConsole"
+	{
+		"en"		"List prints to your console."
+	}
+
+	"SMAC_ConVarRemoved"
+	{
+		"#format"	"{1:s}"
+		"en"		"{1} successfully removed."
+	}
+
+	"SMAC_ConVarNotFound"
+	{
+		"#format"	"{1:s}"
+		"en"		"{1} not found."
+	}
+
+	"SMAC_ConVarNameInvalid"
+	{
+		"#format"	"{1:s}"
+		"en"		"\"{1}\" is not a valid convar."
+	}
 }

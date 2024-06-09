@@ -24,6 +24,7 @@
 #include <sdktools>
 #include <smac>
 #include <sourcemod>
+
 #undef REQUIRE_PLUGIN
 #include <materialadmin>
 #include <sourcebanspp>
@@ -33,25 +34,28 @@
 public Plugin myinfo =
 {
 	name		= "SourceMod Anti-Cheat",
-	author	  	= SMAC_AUTHOR,
+	author		= SMAC_AUTHOR,
 	description = "Open source anti-cheat plugin for SourceMod",
-	version	 	= SMAC_VERSION,
-	url		 	= SMAC_URL
+	version		= SMAC_VERSION,
+	url			= SMAC_URL
 };
 
 /* Globals */
 GameType
 	g_Game = Game_Unknown;
+
 ConVar
-	g_hCvarVersion		= null,
-	g_hCvarWelcomeMsg	= null,
-	g_hCvarBanDuration	= null,
-	g_hCvarLogVerbose	= null;
+	g_hCvarVersion	   = null,
+	g_hCvarWelcomeMsg  = null,
+	g_hCvarBanDuration = null,
+	g_hCvarLogVerbose  = null;
+
 char
 	g_sLogPath[PLATFORM_MAX_PATH];
+
 bool
 	g_bsourcebans	= false,
-	g_bmaterialbans	= false;
+	g_bmaterialbans = false;
 
 /* Plugin Functions */
 public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max)
@@ -70,87 +74,52 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 		Those could be switched over too. Also, is cstrike_beta even still a thing?
 	*/
 
-	if (iEngine == Engine_TF2)
+	switch (iEngine)
 	{
-		g_Game = Game_TF2;
-	}
-	else if (iEngine == Engine_CSS)
-	{
-		g_Game = Game_CSS;
-	}
-	else if (iEngine == Engine_CSGO)
-	{
-		g_Game = Game_CSGO;
-	}
-	else if (iEngine == Engine_DODS)
-	{
-		g_Game = Game_DODS;
-	}
-	else if (iEngine == Engine_Left4Dead)
-	{
-		g_Game = Game_L4D;
-	}
-	else if (iEngine == Engine_Left4Dead2)
-	{
-		g_Game = Game_L4D2;
-	}
-	else if (iEngine == Engine_HL2DM)
-	{
-		g_Game = Game_HL2DM;
-	}
-	else if (iEngine == Engine_NuclearDawn)
-	{
-		g_Game = Game_ND;
-	}
-	else if (iEngine == Engine_Insurgency)
-	{
-		g_Game = Game_INS;
-	}
-	else if (iEngine == Engine_BlackMesa)
-	{
-		g_Game = Game_BM;
-	}
-	else if (iEngine == Engine_SDK2013)
-	{
-		if (StrEqual(sGame, "fof"))
+		case Engine_TF2:
+			g_Game = Game_TF2;
+		case Engine_CSS:
+			g_Game = Game_CSS;
+		case Engine_CSGO:
+			g_Game = Game_CSGO;
+		case Engine_DODS:
+			g_Game = Game_DODS;
+		case Engine_Left4Dead:
+			g_Game = Game_L4D;
+		case Engine_Left4Dead2:
+			g_Game = Game_L4D2;
+		case Engine_HL2DM:
+			g_Game = Game_HL2DM;
+		case Engine_NuclearDawn:
+			g_Game = Game_ND;
+		case Engine_Insurgency:
+			g_Game = Game_INS;
+		case Engine_BlackMesa:
+			g_Game = Game_BM;
+		case Engine_SDK2013:
 		{
-			g_Game = Game_FOF;
+			if (StrEqual(sGame, "fof"))
+				g_Game = Game_FOF;
+			else if (StrEqual(sGame, "zps"))
+				g_Game = Game_ZPS;
+			else if (StrEqual(sGame, "zps"))
+				g_Game = Game_ZMR;
+			else
+				g_Game = Game_Unknown;
 		}
-		else if (StrEqual(sGame, "zps"))
+		case Engine_SourceSDK2006:
 		{
-			g_Game = Game_ZPS;
+			if (StrEqual(sGame, "hl2ctf"))
+				g_Game = Game_HL2CTF;
+			else if (StrEqual(sGame, "hidden"))
+				g_Game = Game_HIDDEN;
+			else
+				g_Game = Game_Unknown;
 		}
-		else if (StrEqual(sGame, "zps"))
-		{
-			g_Game = Game_ZMR;
-		}
-		else
-		{
+		case Engine_Unknown:
 			g_Game = Game_Unknown;
-		}
-	}
-	else if (iEngine == Engine_SourceSDK2006)
-	{
-		if (StrEqual(sGame, "hl2ctf"))
-		{
-			g_Game = Game_HL2CTF;
-		}
-		else if (StrEqual(sGame, "hidden"))
-		{
-			g_Game = Game_HIDDEN;
-		}
-		else
-		{
+		default:
 			g_Game = Game_Unknown;
-		}
-	}
-	else if (iEngine == Engine_Unknown)
-	{
-		g_Game = Game_Unknown;
-	}
-	else
-	{
-		g_Game = Game_Unknown;
 	}
 
 	// Path used for logging.
@@ -187,48 +156,36 @@ public void OnAllPluginsLoaded()
 	// Wait for other modules to create their convars.
 	AutoExecConfig(true, "smac");
 
-	g_bsourcebans   = LibraryExists("sourcebans++");
+	g_bsourcebans	= LibraryExists("sourcebans++");
 	g_bmaterialbans = LibraryExists("materialadmin");
 }
 
 public void OnLibraryRemoved(const char[] name)
 {
 	if (StrEqual(name, "sourcebans++"))
-	{
 		g_bsourcebans = false;
-	}
 	else if (StrEqual(name, "materialadmin"))
-	{
 		g_bmaterialbans = false;
-	}
 }
 
 public void OnLibraryAdded(const char[] name)
 {
 	if (StrEqual(name, "sourcebans++"))
-	{
 		g_bsourcebans = true;
-	}
 	else if (StrEqual(name, "materialadmin"))
-	{
 		g_bmaterialbans = true;
-	}
 }
 
 public void OnVersionChanged(ConVar convar, char[] oldValue, char[] newValue)
 {
 	if (!StrEqual(newValue, SMAC_VERSION))
-	{
 		convar.SetString(SMAC_VERSION, false, false);
-	}
 }
 
 public void OnClientPutInServer(int client)
 {
 	if (g_hCvarWelcomeMsg.BoolValue)
-	{
 		CreateTimer(10.0, Timer_WelcomeMsg, GetClientSerial(client), TIMER_FLAG_NO_MAPCHANGE);
-	}
 }
 
 public Action Timer_WelcomeMsg(Handle timer, any serial)
@@ -236,9 +193,7 @@ public Action Timer_WelcomeMsg(Handle timer, any serial)
 	int client = GetClientFromSerial(serial);
 
 	if (IS_CLIENT(client) && IsClientInGame(client))
-	{
 		CPrintToChat(client, "%t%t", "SMAC_Tag", "SMAC_WelcomeMsg");
-	}
 
 	return Plugin_Stop;
 }
@@ -252,20 +207,14 @@ public Action Command_Status(int client, int args)
 	for (int i = 1; i <= MaxClients; i++)
 	{
 		if (!IsClientConnected(i))
-		{
 			continue;
-		}
 
 		if (!GetClientAuthId(i, AuthId_Steam2, sAuthID, sizeof(sAuthID), true))
 		{
 			if (GetClientAuthId(i, AuthId_Steam2, sAuthID, sizeof(sAuthID), false))
-			{
 				Format(sAuthID, sizeof(sAuthID), "%s (Not Validated)", sAuthID);
-			}
 			else
-			{
 				strcopy(sAuthID, sizeof(sAuthID), "Unknown");
-			}
 		}
 
 		PrintToConsole(client, "%6d  %-40s %N", GetClientUserId(i), sAuthID, i);
@@ -276,9 +225,9 @@ public Action Command_Status(int client, int args)
 
 /* API - Natives & Forwards */
 
-Handle g_OnCheatDetected = INVALID_HANDLE;
+GlobalForward g_OnCheatDetected;
 
-void API_Init()
+void   API_Init()
 {
 	CreateNative("SMAC_GetGameType", Native_GetGameType);
 	CreateNative("SMAC_Log", Native_Log);
@@ -313,21 +262,15 @@ public any Native_LogAction(Handle plugin, int numParams)
 	int client = GetNativeCell(1);
 
 	if (!IS_CLIENT(client) || !IsClientConnected(client))
-	{
 		ThrowNativeError(SP_ERROR_INDEX, "Client index %i is invalid", client);
-	}
 
 	char sAuthID[MAX_AUTHID_LENGTH];
 	if (!GetClientAuthId(client, AuthId_Steam2, sAuthID, sizeof(sAuthID), true))
 	{
 		if (GetClientAuthId(client, AuthId_Steam2, sAuthID, sizeof(sAuthID), false))
-		{
 			Format(sAuthID, sizeof(sAuthID), "%s (Not Validated)", sAuthID);
-		}
 		else
-		{
 			strcopy(sAuthID, sizeof(sAuthID), "Unknown");
-		}
 	}
 
 	char sIP[17];
@@ -346,34 +289,21 @@ public any Native_LogAction(Handle plugin, int numParams)
 	{
 		char  sMap[MAX_MAPNAME_LENGTH], sWeapon[32];
 		float vOrigin[3], vAngles[3];
-		int   iTeam, iLatency;
+		int	  iTeam, iLatency;
 
 		GetCurrentMap(sMap, sizeof(sMap));
 		GetClientAbsOrigin(client, vOrigin);
 		GetClientEyeAngles(client, vAngles);
 		GetClientWeapon(client, sWeapon, sizeof(sWeapon));
-		iTeam	= GetClientTeam(client);
+		iTeam	 = GetClientTeam(client);
 		iLatency = RoundToNearest(GetClientAvgLatency(client, NetFlow_Outgoing) * 1000.0);
 
-		LogToFileEx(g_sLogPath,
-					"[%s | %s] %N (ID: %s | IP: %s) %s\n\tMap: %s | Origin: %.0f %.0f %.0f | Angles: %.0f %.0f %.0f | Weapon: %s | Team: %i | Latency: %ims",
-					sFilename,
-					sVersion,
-					client,
-					sAuthID,
-					sIP,
-					sBuffer,
-					sMap,
-					vOrigin[0], vOrigin[1], vOrigin[2],
-					vAngles[0], vAngles[1], vAngles[2],
-					sWeapon,
-					iTeam,
-					iLatency);
+		LogToFileEx(g_sLogPath, "[%s | %s] %N (ID: %s | IP: %s) %s\n\tMap: %s | Origin: %.0f %.0f %.0f | Angles: %.0f %.0f %.0f | Weapon: %s | Team: %i | Latency: %ims",
+					sFilename, sVersion, client, sAuthID, sIP, sBuffer, sMap, vOrigin[0], vOrigin[1], vOrigin[2], vAngles[0], vAngles[1], vAngles[2], sWeapon, iTeam, iLatency);
 	}
 	else
-	{
 		LogToFileEx(g_sLogPath, "[%s | %s] %N (ID: %s | IP: %s) %s", sFilename, sVersion, client, sAuthID, sIP, sBuffer);
-	}
+
 	return 0;
 }
 
@@ -381,21 +311,17 @@ public any Native_LogAction(Handle plugin, int numParams)
 public any Native_Ban(Handle plugin, int numParams)
 {
 	char sVersion[16], sReason[256];
-	int  client   = GetNativeCell(1);
-	int  duration = g_hCvarBanDuration.IntValue;
+	int	 client	  = GetNativeCell(1);
+	int	 duration = g_hCvarBanDuration.IntValue;
 
 	GetPluginInfo(plugin, PlInfo_Version, sVersion, sizeof(sVersion));
 	FormatNativeString(0, 2, 3, sizeof(sReason), _, sReason);
 	Format(sReason, sizeof(sReason), "SMAC %s: %s", sVersion, sReason);
 
 	if (g_bsourcebans)
-	{
 		SBPP_BanPlayer(0, client, duration, sReason);
-	}
 	else if (g_bmaterialbans)
-	{
 		MABanPlayer(0, client, MA_BAN_STEAM, duration, sReason);
-	}
 	else
 	{
 		char sKickMsg[256];
@@ -404,9 +330,8 @@ public any Native_Ban(Handle plugin, int numParams)
 	}
 
 	if (IsClientConnected(client))
-	{
 		KickClient(client, sReason);
-	}
+
 	return 0;
 }
 
@@ -421,7 +346,7 @@ public any Native_PrintAdminNotice(Handle plugin, int numParams)
 		{
 			SetGlobalTransTarget(i);
 			FormatNativeString(0, 1, 2, sizeof(sBuffer), _, sBuffer);
-			CPrintToChat(i, "%t%s", "SMAC_Tag", sBuffer);
+			CPrintToChat(i, "%t %s", "SMAC_Tag", sBuffer);
 		}
 	}
 	return 0;
@@ -435,13 +360,13 @@ public any Native_CreateConVar(Handle plugin, int numParams)
 	GetNativeString(2, defaultValue, sizeof(defaultValue));
 	GetNativeString(3, description, sizeof(description));
 
-	int   flags  = GetNativeCell(4);
+	int	  flags	 = GetNativeCell(4);
 	bool  hasMin = view_as<bool>(GetNativeCell(5));
-	float min	= view_as<float>(GetNativeCell(6));
+	float min	 = view_as<float>(GetNativeCell(6));
 	bool  hasMax = view_as<bool>(GetNativeCell(7));
-	float max	= view_as<float>(GetNativeCell(8));
+	float max	 = view_as<float>(GetNativeCell(8));
 
-	char sFilename[64];
+	char  sFilename[64];
 	GetPluginBasename(plugin, sFilename, sizeof(sFilename));
 	Format(description, sizeof(description), "[%s] %s", sFilename, description);
 
@@ -454,21 +379,17 @@ public int Native_CheatDetected(Handle plugin, int numParams)
 	int client = GetNativeCell(1);
 
 	if (!IS_CLIENT(client) || !IsClientConnected(client))
-	{
 		ThrowNativeError(SP_ERROR_INDEX, "Client index %i is invalid", client);
-	}
 
 	// Block duplicate detections.
 	if (IsClientInKickQueue(client))
-	{
 		return view_as<int>(Plugin_Handled);
-	}
 
 	char sFilename[64];
 	GetPluginBasename(plugin, sFilename, sizeof(sFilename));
 
 	DetectionType type = Detection_Unknown;
-	Handle		info = INVALID_HANDLE;
+	Handle		  info = INVALID_HANDLE;
 
 	if (numParams == 3)
 	{

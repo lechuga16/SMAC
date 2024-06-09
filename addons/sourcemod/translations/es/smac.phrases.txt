@@ -1,5 +1,10 @@
 "Phrases"
 {
+	"SMAC_Tag"
+	{
+		"es"		"[{green}SMAC{default}] "
+	}
+
 	"SMAC_Banned"
 	{
 		"es"		"Has sido bloqueado por usar trampas."
@@ -113,5 +118,54 @@
 	"SMAC_WelcomeMsg"
 	{
 		"es"		"Este servidor está protegido por {olive}SourceMod Anti-Cheat{default}."
+	}
+
+	"CheatDisabled"
+	{
+		"es"		"sv_cheats ha sido {blue}deshabilitado{default}. La comprobación de ConVar se ha {olive}reanudado{default}."
+	}
+
+	"CheatEnabled"
+	{
+		"es"		"sv_cheats ha sido {red}habilitado{default}. La comprobación de ConVar se ha {olive}deshabilitado{default}."
+	}
+
+	"SMAC_CvarAdded"
+	{
+		"#format"	"{1:s}"
+		"es"		"{1} añadido con éxito."
+	}
+
+	"SMAC_Usage"
+	{
+		"es"		"Uso"
+	}
+
+	"SMAC_NoConVar"
+	{
+		"es"		"No hay variables almacenadas."
+	}
+
+	"SMAC_PrintConsole"
+	{
+		"es"		"Imprimiendo variables en tu consola."
+	}
+
+	"SMAC_ConVarRemoved"
+	{
+		"#format"	"{1:s}"
+		"es"		"{1} eliminado con éxito."
+	}
+
+	"SMAC_ConVarNotFound"
+	{
+		"#format"	"{1:s}"
+		"es"		"{1} no encontrado."
+	}
+
+	"SMAC_ConVarNameInvalid"
+	{
+		"#format"	"{1:s}"
+		"es"		"\"{1}\" no es una variable válida."
 	}
 }
