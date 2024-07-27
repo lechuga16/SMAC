@@ -70,20 +70,19 @@ int
 
 // plugin state
 bool
-	g_bLateLoad,
 	g_bPluginStarted;
 
 EngineVersion
 	g_Engine;
 
 ConVar
-	sv_cheats;
+	sv_cheats,
+	g_cvarOnlyKick;
 
 /* Plugin Functions */
 public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max)
 {
 	g_Engine	= GetEngineVersion();
-	g_bLateLoad = late;
 	return APLRes_Success;
 }
 
@@ -149,6 +148,7 @@ public void OnPluginStart()
 	while (kvCvars.GotoNextKey());
 	delete kvCvars;
 
+	g_cvarOnlyKick = CreateConVar("smac_cvar_onlykick", "0", "Only kick players for cvar violations", _, true, 0.0, true, 1.0);
 	sv_cheats = FindConVar("sv_cheats");
 	sv_cheats.AddChangeHook(OnCheatsChanged);
 
@@ -160,16 +160,6 @@ public void OnPluginStart()
 	// scramble ordering.
 	if (g_iADTSize)
 		ScrambleCvars();
-
-	// Start on all clients.
-	if (g_bLateLoad)
-	{
-		for (int i = 1; i <= MaxClients; i++)
-		{
-			if (IsClientInGame(i) && IsClientAuthorized(i))
-				OnClientPostAdminCheck(i);
-		}
-	}
 
 	g_bPluginStarted = true;
 }
@@ -608,8 +598,16 @@ public void OnConVarQueryFinished(QueryCookie cookie, int client, ConVarQueryRes
 			}
 			case Action_Ban:
 			{
-				SMAC_LogAction(client, "was banned for failing checks on convar \"%s\". result \"%s\" | CompType: \"%s\" | cvarValue \"%s\" | value: \"%s\" | value2: \"%s\"", sCvar, sResult, sCompType, cvarValue, sValue, sValue2);
-				SMAC_Ban(client, "ConVar %s violation", sCvar);
+				if (g_cvarOnlyKick.BoolValue)
+				{
+					SMAC_LogAction(client, "was kicked for failing checks on convar \"%s\". result \"%s\" | CompType: \"%s\" | cvarValue \"%s\" | value: \"%s\" | value2: \"%s\"", sCvar, sResult, sCompType, cvarValue, sValue, sValue2);
+					KickClient(client, "\n%s", sKickMessage);
+				}
+				else
+				{
+					SMAC_LogAction(client, "was banned for failing checks on convar \"%s\". result \"%s\" | CompType: \"%s\" | cvarValue \"%s\" | value: \"%s\" | value2: \"%s\"", sCvar, sResult, sCompType, cvarValue, sValue, sValue2);
+					SMAC_Ban(client, "ConVar %s violation", sCvar);
+				}
 			}
 		}
 	}
